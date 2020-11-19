@@ -128,6 +128,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    packagingOptions{
+        doNotStrip "*/armeabi/*.so"
+        doNotStrip "*/armeabi-v7a/*.so"
+        doNotStrip "*/x86/*.so"
+    }
+
     
 
     defaultConfig {
