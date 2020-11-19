@@ -1,5 +1,4 @@
 install:
-  - nvm install && nvm use
   - npm install -g "npm@$(jq -r '.engines.npm' package.json)"
   - npm ci
 language: android
