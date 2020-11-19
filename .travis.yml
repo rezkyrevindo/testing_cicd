@@ -37,7 +37,7 @@ matrix:
           - extra-android-m2repository
           - addon-google_apis-google-$ANDROID_API_LEVEL
       before_install :
-        - chmod +x gradlew
+        - chmod +x ./android/gradlew
       before_script:
         # Prepare pre-accepted licenses to not be promted at installation
         - yes | sdkmanager "platforms;android-27"
