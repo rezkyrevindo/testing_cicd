@@ -35,20 +35,20 @@ before_script :
 script: 
 - npm run ci #2
 - cd android && ./gradlew assembleRelease #3
-deploy:
-  provider: releases
-  api-key: $GITHUB_API_KEY
-  file: $TRAVIS_BUILD_DIR/android/app/build/outputs/apk/release/app-release.apk
-  skip_cleanup: true
-  name: dev-build-$TRAVIS_TAG
-  body: Automatic build of $TRAVIS_BRANCH ($TRAVIS_COMMIT) built by Travis CI on $(date +'%F %T %Z').
-  prerelease: true
-  overwrite: true
-  target_commitish: $TRAVIS_COMMIT
-  on:
-    tags: true
+# deploy:
+#   provider: releases
+#   api-key: $GITHUB_API_KEY
+#   file: $TRAVIS_BUILD_DIR/android/app/build/outputs/apk/release/app-release.apk
+#   skip_cleanup: true
+#   name: dev-build-$TRAVIS_TAG
+#   body: Automatic build of $TRAVIS_BRANCH ($TRAVIS_COMMIT) built by Travis CI on $(date +'%F %T %Z').
+#   prerelease: true
+#   overwrite: true
+#   target_commitish: $TRAVIS_COMMIT
+#   on:
+#     tags: true
 
-after_deploy:
-  - rm -rf $TRAVIS_BUILD_DIR/android/app/build/outputs
+# after_deploy:
+#   - rm -rf $TRAVIS_BUILD_DIR/android/app/build/outputs
 
 
