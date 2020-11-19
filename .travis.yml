@@ -34,7 +34,7 @@ matrix:
         - yes | sdkmanager "platforms;android-27"
         - chmod +x ./android/gradlew
       script:
-        - cd android && ./gradlew clean
+        - cd android
       after_script:
         - ./gradlew assembleRelease
 
