@@ -43,7 +43,7 @@ matrix:
         - yes | sdkmanager "platforms;android-27"
 
       script:
-        - ./android/gradlew assembleRelease
+        - ./android/gradlew assemble
 
       deploy:
         provider: releases
