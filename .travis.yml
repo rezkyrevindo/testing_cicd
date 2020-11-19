@@ -16,16 +16,6 @@ matrix:
       language: android
       jdk: oraclejdk8
       sudo: required
-      dist: precise
-      before_cache:
-        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-        - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-      cache:
-        yarn: true
-        directories:
-          - $HOME/.gradle/caches/
-          - $HOME/.gradle/wrapper/
-          - node_modules
       android:
         components:
           - platform-tools
@@ -39,18 +29,10 @@ matrix:
         - android-sdk-preview-license-.+
         - android-sdk-license-.+
         - google-gdk-license-.+
-      before_install:
-        - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
-        - export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-        - nvm install stable
-        - nvm use  stable
-        - nvm alias default stable
-        - npm install -g react-native-cli
-        - npm install -g detox-cli
-        - npm install -g yarn
+      before_script:
+        # Prepare pre-accepted licenses to not be promted at installation
+        - yes | sdkmanager "platforms;android-27"
         - chmod +x ./android/gradlew
-      install:
-        - yarn install
       script:
         - cd android && ./gradlew clean
       after_script:
