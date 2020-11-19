@@ -15,35 +15,46 @@ matrix:
     - os: linux
       language: android
       jdk: oraclejdk8
-      env:
-        global:
-          - ANDROID_API_LEVEL=25
-          - ANDROID_BUILD_TOOLS_VERSION=25.0.2
+      sudo: required
+      dist: precise
+      before_cache:
+        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+        - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+      cache:
+        yarn: true
+        directories:
+          - $HOME/.gradle/caches/
+          - $HOME/.gradle/wrapper/
+          - node_modules
       android:
-        licenses:
-          - 'android-sdk-preview-license-.+'
-          - 'android-sdk-license-.+'
-          - 'google-gdk-license-.+'
         components:
-          - tools
           - platform-tools
-          # The BuildTools version used by your project
-          - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-          # The SDK version used to compile your project
-          - android-$ANDROID_API_LEVEL
-          # Additional components
+          - tools
+          - build-tools-23.0.1
+          - android-23
+          - extra-android-m2repository
           - extra-google-google_play_services
           - extra-google-m2repository
-          - extra-android-m2repository
-          - addon-google_apis-google-$ANDROID_API_LEVEL
-      before_install :
+      licenses:
+        - android-sdk-preview-license-.+
+        - android-sdk-license-.+
+        - google-gdk-license-.+
+      before_install:
+        - nvm install 7
+        - node --version
+        - travis_retry curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+        - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+        - travis_retry sudo apt-get update -qq
+        - travis_retry sudo apt-get install -y -qq yarn
         - chmod +x ./android/gradlew
-      before_script:
-        # Prepare pre-accepted licenses to not be promted at installation
-        - yes | sdkmanager "platforms;android-27"
-
+        - openssl aes-256-cbc -K $encrypted_b6cc45ee0c0c_key -iv $encrypted_b6cc45ee0c0c_iv -in ./android/app/rn-sample-key.keystore.enc -out ./android/app/rn-sample-key.keystore -d
+        - gem install fastlane --no-rdoc --no-ri --no-document --quiet
+      install:
+        - yarn install
       script:
-        - ./android/gradlew assemble
+        - cd android && ./gradlew clean
+      after_script:
+        - ./gradlew assembleRelease
 
       deploy:
         provider: releases
@@ -60,3 +71,4 @@ matrix:
 
       after_deploy:
         - rm -rf $TRAVIS_BUILD_DIR/app/build/outputs
+
