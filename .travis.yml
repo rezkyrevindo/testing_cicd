@@ -9,6 +9,8 @@ install:
 - npm install -g detox-cli
 - npm install -g yarn
 
+- npm i @react-native-community/cli-platform-android
+
 matrix:
   include:
 
