@@ -30,8 +30,8 @@ matrix:
         components:
           - platform-tools
           - tools
-          - build-tools-23.0.1
-          - android-23
+          - build-tools-29.0.2
+          - android-29
           - extra-android-m2repository
           - extra-google-google_play_services
           - extra-google-m2repository
@@ -40,15 +40,15 @@ matrix:
         - android-sdk-license-.+
         - google-gdk-license-.+
       before_install:
-        - nvm install 7
-        - node --version
-        - travis_retry curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-        - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-        - travis_retry sudo apt-get update -qq
-        - travis_retry sudo apt-get install -y -qq yarn
+        - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+        - export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+        - nvm install stable
+        - nvm use  stable
+        - nvm alias default stable
+        - npm install -g react-native-cli
+        - npm install -g detox-cli
+        - npm install -g yarn
         - chmod +x ./android/gradlew
-        - openssl aes-256-cbc -K $encrypted_b6cc45ee0c0c_key -iv $encrypted_b6cc45ee0c0c_iv -in ./android/app/rn-sample-key.keystore.enc -out ./android/app/rn-sample-key.keystore -d
-        - gem install fastlane --no-rdoc --no-ri --no-document --quiet
       install:
         - yarn install
       script:
@@ -59,7 +59,7 @@ matrix:
       deploy:
         provider: releases
         api-key: $GITHUB_API_KEY
-        file: $TRAVIS_BUILD_DIR/app/build/outputs/apk/release/app-release.apk
+        file: $TRAVIS_BUILD_DIR/android/app/build/outputs/apk/release/app-release.apk
         skip_cleanup: true
         name: dev-build-$TRAVIS_TAG
         body: Automatic build of $TRAVIS_BRANCH ($TRAVIS_COMMIT) built by Travis CI on $(date +'%F %T %Z').
@@ -70,5 +70,5 @@ matrix:
           tags: true
 
       after_deploy:
-        - rm -rf $TRAVIS_BUILD_DIR/app/build/outputs
+        - rm -rf $TRAVIS_BUILD_DIR/android/app/build/outputs
 
